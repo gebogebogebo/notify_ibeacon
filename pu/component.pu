@@ -15,6 +15,9 @@ package iPhone{
   interface "LINE App" as LINE_App
 }
 
+actor "げぼ" as gebo
+
+gebo -up- MAMORIO_GEBO:geboが所持
 MAMORIO_GEBO .up.> py:BLE
 MAMORIO_CHECK .up.> py:BLE
 py .up.> LINE_Norify:HTTP Post
