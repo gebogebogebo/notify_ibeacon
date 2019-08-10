@@ -1,7 +1,7 @@
 @startuml
 
-component "MAMORIO\ngebo\n(接近監視)" as MAMORIO_GEBO
-component "MAMORIO\ncheck\n(離脱監視)" as MAMORIO_CHECK
+component "MAMORIO\ngebo\n(出勤監視)" as MAMORIO_GEBO
+component "MAMORIO\ncheck\n(退勤監視)" as MAMORIO_CHECK
 
 cloud {
   interface "LINE Notify" as LINE_Norify
