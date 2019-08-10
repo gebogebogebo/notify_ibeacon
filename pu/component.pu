@@ -1,0 +1,23 @@
+@startuml
+
+component "MAMORIO\ngebo\n(接近監視)" as MAMORIO_GEBO
+component "MAMORIO\ncheck\n(離脱監視)" as MAMORIO_CHECK
+
+cloud {
+  interface "LINE Notify" as LINE_Norify
+}
+
+node ラズパイ {
+  interface "Python Program" as py
+}
+
+package iPhone{
+  interface "LINE App" as LINE_App
+}
+
+MAMORIO_GEBO .up.> py:BLE
+MAMORIO_CHECK .up.> py:BLE
+py .up.> LINE_Norify:HTTP Post
+LINE_Norify ..> LINE_App:LINE Message\n**geboがきた！**
+
+@enduml
