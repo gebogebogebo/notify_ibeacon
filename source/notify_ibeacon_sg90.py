@@ -10,6 +10,11 @@ MAMORIO_TARGETS = {
         ("test", 55555,66666,"yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
         }
 
+#GPIO
+import RPi.GPIO as GPIO
+import time
+
+#iBeacon
 import dbus
 import dbus.mainloop.glib
 try:
@@ -23,6 +28,40 @@ import requests
 
 devices = {}
 targets = {}
+
+# motor up
+def up_gpio():
+        # 使用するGPIO番号
+        gp_out = 2
+
+        # GPIOの初期化
+        GPIO.setmode(GPIO.BCM)
+
+        GPIO.setup(gp_out, GPIO.OUT)
+        motor = GPIO.PWM(gp_out, 50)
+        motor.start(0.0)
+
+        motor.ChangeDutyCycle(2.5)
+        time.sleep(1.5)
+
+        GPIO.cleanup()
+
+# motor down
+def down_gpio():
+        # 使用するGPIO番号
+        gp_out = 2
+
+        # GPIOの初期化
+        GPIO.setmode(GPIO.BCM)
+
+        GPIO.setup(gp_out, GPIO.OUT)
+        motor = GPIO.PWM(gp_out, 50)
+        motor.start(0.0)
+
+        motor.ChangeDutyCycle(12.0)
+        time.sleep(1.5)
+
+        GPIO.cleanup()
 
 # LINE通知する
 def send_notify(access_token,username,comment):
@@ -144,9 +183,11 @@ def scan_ibeacon(properties):
                                         founds = [i for i in MAMORIO_TARGETS if i[0]==notify_user]
                                         if(len(founds) > 0):
                                                 send_notify(founds[0][3],notify_user,"どっかいった！")
+                                                down_gpio()
                         else:
                                 if( update_targets(username) == True):
                                         send_notify(token,username,"きた！")
+                                        up_gpio()
 
 def interfaces_added(path, interfaces):
         properties = interfaces["org.bluez.Device1"]
@@ -173,6 +214,9 @@ def properties_changed(interface, changed, invalidated, path):
         scan_ibeacon(devices[path])
 
 if __name__ == '__main__':
+
+        down_gpio()
+
         dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
 
         bus = dbus.SystemBus()
